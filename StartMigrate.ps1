@@ -670,14 +670,16 @@ else {
 # Delete source tenant objects
 if ($pc.intuneId) {
     log info "Deleting Intune object..."
+    $intuneUri = "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$($pc.intuneId)"
     try {
-        Invoke-RestMethod -Method DELETE -Uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$($pc.intuneId)" -Headers $sourceHeaders
+        Invoke-RestMethod -Method DELETE -Uri $intuneUri -Headers $sourceHeaders
+        Start-Sleep -Seconds 60
         log success "Intune object deleted successfully"
     }
     catch {
         $message = $_.Exception.Message
         log error "Failed to delete Intune object: $message"
-        log warning "Manually delete"
+        log warning "Please delete manually"
     }
 }
 else {
@@ -686,9 +688,10 @@ else {
 
 if ($pc.autopilotId) {
     log info "Deleting Autopilot object..."
+    $autopilotUri = "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities/$($pc.autopilotId)"
     try {
-        Invoke-RestMethod -Method DELETE -Uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities/$($pc.autopilotId)" -Headers $sourceHeaders
-        log success "Autopilot object deleted successfully"
+        Invoke-RestMethod -Method DELETE -Uri $autopilotUri -Headers $sourceHeaders
+        log info "Check if $($pc.hostname) was removed from Autopilot"
     }
     catch {
         $message = $_.Exception.Message
@@ -859,6 +862,6 @@ catch {
 }
 
 # Stop transcript and restart
-log "$($pc.hostname) will reboot in 30 seconds..."
+log info "$($pc.hostname) will reboot in 30 seconds..."
 Stop-Transcript
 shutdown -r -t 30

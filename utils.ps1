@@ -19,21 +19,26 @@
 # Utilities used throughout the migration process
 
 # Log function
-function log {
-    Param(
-        [string]$message,
-        [string]$type
+function Log {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, Position=0)]
+        [ValidateSet('info','warning','error','success')]
+        [string]$Type,
+
+        [Parameter(Mandatory, Position=1)]
+        [string]$Message
     )
-    $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss tt"
-    $typeFormatted = switch ($type) {
-        "info" { "[INFO]" }
-        "error" { "[ERROR]" }
-        "warning" { "[WARNING]" }
-        "success" { "[SUCCESS]" }
-        Default { "[$($type.ToUpper())]" }
+
+    $date = Get-Date -Format 'yyyy-MM-dd hh:mm:ss tt' # or HH without tt
+    $typeFormatted = switch ($Type.ToLower()) {
+        'info'    { '[INFO]' }
+        'warning' { '[WARNING]' }
+        'error'   { '[ERROR]' }
+        'success' { '[SUCCESS]' }
     }
-    $output = "$($date) - $typeFormatted - $($message)"
-    Write-Output $output
+
+    "$date - $typeFormatted - $Message" | Write-Output
 }
 
 # Graph authenticate
