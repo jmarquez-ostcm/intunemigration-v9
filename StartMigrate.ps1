@@ -87,20 +87,20 @@ Where-Object {
 
 $Seen = @{}
 
-foreach ($Profile in $Profiles) {
+foreach ($Prof in $Profiles) {
 
     # Base name = everything before the first dot
-    $BaseName = ($Profile.Name -split '\.')[0].ToLower()
+    $BaseName = ($Prof.Name -split '\.')[0].ToLower()
 
     # If we've already seen this base name, exit
     if ($Seen.ContainsKey($BaseName)) {
         log error "Duplicate user profile detected: '$BaseName'"
         log error "Existing profile: $($Seen[$BaseName])"
-        log error  "Duplicate profile: $($Profile.FullName)"
+        log error  "Duplicate profile: $($Prof.FullName)"
         exit 1
     }
     # Record first occurrence
-    $Seen[$BaseName] = $Profile.FullName
+    $Seen[$BaseName] = $Prof.FullName
 }
 
 log info "No duplicate user profiles found. Continuing script..."
