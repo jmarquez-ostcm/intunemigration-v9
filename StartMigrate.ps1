@@ -64,8 +64,8 @@ if ($currentSID -notin $systemSIDs) {
 
 #Check PeferredDomainList
 $prefDomain = Get-ItemPropertyValue -Path HKLM:\SOFTWARE\Policies\Microsoft\AzureADAccount -Name PreferredTenantDomainName
-If ($prefDomain -eq "ctsolutions-inc.com") {
-    log error "Preferred tenant domain set to ctsolutions-inc.com"
+If ($prefDomain -ne $null) {
+    log error "Preferred tenant domain set to $prefDomain"
     log error "Set Intune Device Category to Premigrate, Intune resync, retry."
     exit 1
 }
